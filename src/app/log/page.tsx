@@ -66,20 +66,20 @@ export default function LogPage() {
 
   return (
     <div className="grid gap-6">
-      <div className="rounded-3xl border border-zinc-200 bg-white p-6 dark:border-white/10 dark:bg-white/5">
+      <div className="ll-card">
         <h1 className="text-2xl font-semibold tracking-tight">Log today’s symptoms</h1>
         <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-300">
           Weekly updates improve the community dataset and help identify correlations. This is a
           prototype: logs are stored only in your browser.
         </p>
-        <div className="mt-5 grid gap-4 md:grid-cols-2">
+        <div className="mt-6 grid gap-4 md:grid-cols-2">
           <label className="grid gap-2 text-sm">
             <span className="font-semibold">Date</span>
             <input
               type="date"
               value={entry.date}
               onChange={(e) => setEntry((v) => ({ ...v, date: e.target.value }))}
-              className="h-11 rounded-2xl border border-zinc-200 bg-white px-4 text-sm outline-none focus:ring-2 focus:ring-zinc-900/10 dark:border-white/10 dark:bg-black dark:focus:ring-white/10"
+              className="h-11 rounded-2xl border border-zinc-200/70 bg-white/70 px-4 text-sm outline-none backdrop-blur focus:ring-2 focus:ring-zinc-900/10 dark:border-white/10 dark:bg-black/30 dark:focus:ring-white/10"
             />
           </label>
 
@@ -94,7 +94,7 @@ export default function LogPage() {
                 onChange={(e) =>
                   setEntry((v) => ({ ...v, pain: Number(e.target.value) }))
                 }
-                className="h-11 rounded-2xl border border-zinc-200 bg-white px-4 text-sm outline-none focus:ring-2 focus:ring-zinc-900/10 dark:border-white/10 dark:bg-black dark:focus:ring-white/10"
+                className="h-11 rounded-2xl border border-zinc-200/70 bg-white/70 px-4 text-sm outline-none backdrop-blur focus:ring-2 focus:ring-zinc-900/10 dark:border-white/10 dark:bg-black/30 dark:focus:ring-white/10"
               />
             </label>
             <label className="grid gap-2 text-sm">
@@ -107,7 +107,7 @@ export default function LogPage() {
                 onChange={(e) =>
                   setEntry((v) => ({ ...v, fatigue: Number(e.target.value) }))
                 }
-                className="h-11 rounded-2xl border border-zinc-200 bg-white px-4 text-sm outline-none focus:ring-2 focus:ring-zinc-900/10 dark:border-white/10 dark:bg-black dark:focus:ring-white/10"
+                className="h-11 rounded-2xl border border-zinc-200/70 bg-white/70 px-4 text-sm outline-none backdrop-blur focus:ring-2 focus:ring-zinc-900/10 dark:border-white/10 dark:bg-black/30 dark:focus:ring-white/10"
               />
             </label>
           </div>
@@ -123,7 +123,7 @@ export default function LogPage() {
                 onChange={(e) =>
                   setEntry((v) => ({ ...v, bloating: Number(e.target.value) }))
                 }
-                className="h-11 rounded-2xl border border-zinc-200 bg-white px-4 text-sm outline-none focus:ring-2 focus:ring-zinc-900/10 dark:border-white/10 dark:bg-black dark:focus:ring-white/10"
+                className="h-11 rounded-2xl border border-zinc-200/70 bg-white/70 px-4 text-sm outline-none backdrop-blur focus:ring-2 focus:ring-zinc-900/10 dark:border-white/10 dark:bg-black/30 dark:focus:ring-white/10"
               />
             </label>
             <label className="grid gap-2 text-sm">
@@ -136,7 +136,7 @@ export default function LogPage() {
                 onChange={(e) =>
                   setEntry((v) => ({ ...v, stress: Number(e.target.value) }))
                 }
-                className="h-11 rounded-2xl border border-zinc-200 bg-white px-4 text-sm outline-none focus:ring-2 focus:ring-zinc-900/10 dark:border-white/10 dark:bg-black dark:focus:ring-white/10"
+                className="h-11 rounded-2xl border border-zinc-200/70 bg-white/70 px-4 text-sm outline-none backdrop-blur focus:ring-2 focus:ring-zinc-900/10 dark:border-white/10 dark:bg-black/30 dark:focus:ring-white/10"
               />
             </label>
           </div>
@@ -151,7 +151,7 @@ export default function LogPage() {
               onChange={(e) =>
                 setEntry((v) => ({ ...v, sleepHours: Number(e.target.value) }))
               }
-              className="h-11 rounded-2xl border border-zinc-200 bg-white px-4 text-sm outline-none focus:ring-2 focus:ring-zinc-900/10 dark:border-white/10 dark:bg-black dark:focus:ring-white/10"
+              className="h-11 rounded-2xl border border-zinc-200/70 bg-white/70 px-4 text-sm outline-none backdrop-blur focus:ring-2 focus:ring-zinc-900/10 dark:border-white/10 dark:bg-black/30 dark:focus:ring-white/10"
             />
           </label>
 
@@ -161,7 +161,7 @@ export default function LogPage() {
               value={entry.notes}
               onChange={(e) => setEntry((v) => ({ ...v, notes: e.target.value }))}
               placeholder="Lifestyle factors, remedies tried, diet changes, exercise, stressors…"
-              className="min-h-28 rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-zinc-900/10 dark:border-white/10 dark:bg-black dark:focus:ring-white/10"
+              className="min-h-28 rounded-2xl border border-zinc-200/70 bg-white/70 px-4 py-3 text-sm outline-none backdrop-blur focus:ring-2 focus:ring-zinc-900/10 dark:border-white/10 dark:bg-black/30 dark:focus:ring-white/10"
             />
           </label>
         </div>
@@ -169,20 +169,20 @@ export default function LogPage() {
         <div className="mt-5 flex flex-col gap-3 sm:flex-row">
           <button
             onClick={submit}
-            className="inline-flex h-11 items-center justify-center rounded-2xl bg-zinc-900 px-5 text-sm font-semibold text-white transition-colors hover:bg-zinc-800 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
+            className="ll-btn-primary"
           >
             Submit weekly update
           </button>
           <Link
             href="/"
-            className="inline-flex h-11 items-center justify-center rounded-2xl border border-zinc-200 bg-white px-5 text-sm font-semibold text-zinc-900 transition-colors hover:bg-zinc-50 dark:border-white/10 dark:bg-black dark:text-zinc-50 dark:hover:bg-white/5"
+            className="ll-btn-secondary"
           >
             Back to home
           </Link>
         </div>
 
         {submitted && (
-          <div className="mt-5 rounded-2xl bg-zinc-50 px-4 py-3 text-sm text-zinc-700 dark:bg-white/5 dark:text-zinc-200">
+          <div className="mt-5 rounded-2xl bg-zinc-50/70 px-4 py-3 text-sm text-zinc-700 dark:bg-white/5 dark:text-zinc-200">
             Saved. Thank you for contributing to the dataset.
           </div>
         )}

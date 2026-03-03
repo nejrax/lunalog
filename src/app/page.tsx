@@ -14,14 +14,17 @@ function formatPercent(p: number) {
 export default function Home() {
   return (
     <div className="grid gap-12">
-      <section className="rounded-3xl border border-zinc-200 bg-white p-8 dark:border-white/10 dark:bg-white/5">
+      <section className="ll-card p-8">
         <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
           <div>
-            <p className="inline-flex items-center rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-semibold text-zinc-700 dark:border-white/10 dark:bg-black dark:text-zinc-200">
+            <p className="ll-pill">
               Privacy-first • Anonymous tracking • Research-style insights
             </p>
             <h1 className="mt-4 text-4xl font-semibold tracking-tight">
-              Machine-learning powered pattern discovery for PCOS & endometriosis symptoms
+              <span className="ll-accent-text">
+                Machine-learning powered pattern discovery
+              </span>{" "}
+              for PCOS & endometriosis symptoms
             </h1>
             <p className="mt-4 text-sm leading-6 text-zinc-600 dark:text-zinc-300">
               LunaLog helps you track symptoms and lifestyle factors, then aggregates anonymous
@@ -32,19 +35,19 @@ export default function Home() {
             <div className="mt-6 grid gap-3 sm:flex sm:flex-wrap">
               <Link
                 href="/login"
-                className="inline-flex h-11 items-center justify-center rounded-2xl bg-zinc-900 px-5 text-sm font-semibold text-white transition-colors hover:bg-zinc-800 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
+                className="ll-btn-primary"
               >
                 Sign up / login anonymously
               </Link>
               <Link
                 href="/log"
-                className="inline-flex h-11 items-center justify-center rounded-2xl border border-zinc-200 bg-white px-5 text-sm font-semibold text-zinc-900 transition-colors hover:bg-zinc-50 dark:border-white/10 dark:bg-black dark:text-zinc-50 dark:hover:bg-white/5"
+                className="ll-btn-secondary"
               >
                 Log today’s symptoms
               </Link>
               <Link
                 href="/admin"
-                className="inline-flex h-11 items-center justify-center rounded-2xl border border-zinc-200 bg-white px-5 text-sm font-semibold text-zinc-900 transition-colors hover:bg-zinc-50 dark:border-white/10 dark:bg-black dark:text-zinc-50 dark:hover:bg-white/5"
+                className="ll-btn-secondary"
               >
                 Admin
               </Link>
@@ -52,10 +55,10 @@ export default function Home() {
           </div>
 
           <div className="grid gap-4">
-            <div className="rounded-3xl border border-zinc-200 bg-white p-6 dark:border-white/10 dark:bg-black">
+            <div className="ll-card-inner">
               <p className="text-sm font-semibold">The power of your data</p>
               <div className="mt-4 grid grid-cols-3 gap-3">
-                <div className="rounded-2xl bg-zinc-50 p-4 dark:bg-white/5">
+                <div className="rounded-2xl bg-zinc-50/70 p-4 dark:bg-white/5">
                   <div className="text-2xl font-semibold">
                     {impactCounters.experiences.toLocaleString()}
                   </div>
@@ -63,7 +66,7 @@ export default function Home() {
                     real-world experiences
                   </div>
                 </div>
-                <div className="rounded-2xl bg-zinc-50 p-4 dark:bg-white/5">
+                <div className="rounded-2xl bg-zinc-50/70 p-4 dark:bg-white/5">
                   <div className="text-2xl font-semibold">
                     {impactCounters.insights.toLocaleString()}
                   </div>
@@ -71,7 +74,7 @@ export default function Home() {
                     statistical insights
                   </div>
                 </div>
-                <div className="rounded-2xl bg-zinc-50 p-4 dark:bg-white/5">
+                <div className="rounded-2xl bg-zinc-50/70 p-4 dark:bg-white/5">
                   <div className="text-2xl font-semibold">
                     {impactCounters.countries.toLocaleString()}
                   </div>
@@ -82,7 +85,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="rounded-3xl border border-zinc-200 bg-white p-6 dark:border-white/10 dark:bg-black">
+            <div className="ll-card-inner">
               <p className="text-sm font-semibold">Privacy & anonymity badge</p>
               <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-300">
                 No real names required. Data is de-identified and aggregated for pattern
@@ -113,13 +116,13 @@ export default function Home() {
         </div>
 
         <div className="grid gap-6 lg:grid-cols-3">
-          <div className="rounded-3xl border border-zinc-200 bg-white p-6 dark:border-white/10 dark:bg-white/5">
+          <div className="ll-card">
             <p className="text-sm font-semibold">Live correlation stats</p>
             <div className="mt-4 grid gap-3">
               {correlationStats.map((s) => (
                 <div
                   key={s.label}
-                  className="rounded-2xl border border-zinc-200 bg-white p-4 dark:border-white/10 dark:bg-black"
+                  className="ll-card-inner"
                 >
                   <div className="flex items-center justify-between gap-3">
                     <p className="text-sm font-semibold">{s.label}</p>
@@ -138,7 +141,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="rounded-3xl border border-zinc-200 bg-white p-6 dark:border-white/10 dark:bg-white/5 lg:col-span-2">
+          <div className="ll-card lg:col-span-2">
             <p className="text-sm font-semibold">Symptom heatmap</p>
             <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-300">
               A visual summary of what the community reports most frequently.
@@ -147,7 +150,7 @@ export default function Home() {
               {symptomHeat.map((s) => (
                 <div
                   key={s.symptom}
-                  className="rounded-2xl border border-zinc-200 bg-white p-4 dark:border-white/10 dark:bg-black"
+                  className="ll-card-inner"
                 >
                   <div className="flex items-center justify-between">
                     <p className="text-sm font-semibold">{s.symptom}</p>
@@ -180,13 +183,13 @@ export default function Home() {
         </div>
 
         <div className="grid gap-6 lg:grid-cols-3">
-          <div className="rounded-3xl border border-zinc-200 bg-white p-6 dark:border-white/10 dark:bg-white/5 lg:col-span-2">
+          <div className="ll-card lg:col-span-2">
             <p className="text-sm font-semibold">Moderated blog highlights</p>
             <div className="mt-4 grid gap-3 md:grid-cols-2">
               {blogHighlights.map((b) => (
                 <div
                   key={b.id}
-                  className="rounded-2xl border border-zinc-200 bg-white p-4 dark:border-white/10 dark:bg-black"
+                  className="ll-card-inner"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <p className="text-sm font-semibold">{b.title}</p>
@@ -205,13 +208,13 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="rounded-3xl border border-zinc-200 bg-white p-6 dark:border-white/10 dark:bg-white/5">
+          <div className="ll-card">
             <p className="text-sm font-semibold">Forum sneak-peek</p>
             <div className="mt-4 grid gap-3">
               {trendingTopics.map((t) => (
                 <div
                   key={t.id}
-                  className="rounded-2xl border border-zinc-200 bg-white p-4 dark:border-white/10 dark:bg-black"
+                  className="ll-card-inner"
                 >
                   <p className="text-sm font-semibold">{t.title}</p>
                   <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400">
@@ -228,17 +231,17 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="rounded-3xl border border-zinc-200 bg-white p-8 dark:border-white/10 dark:bg-white/5">
+      <section className="ll-card p-8">
         <h2 className="text-2xl font-semibold tracking-tight">Transparency & trust</h2>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
-          <div className="rounded-3xl border border-zinc-200 bg-white p-6 dark:border-white/10 dark:bg-black">
+          <div className="ll-card-inner p-6">
             <p className="text-sm font-semibold">No medical advice</p>
             <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-300">
               The app provides community analysis only. Correlations are not causation and may be
               affected by confounders.
             </p>
           </div>
-          <div className="rounded-3xl border border-zinc-200 bg-white p-6 dark:border-white/10 dark:bg-black">
+          <div className="ll-card-inner p-6">
             <p className="text-sm font-semibold">Anonymized research dataset</p>
             <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-300">
               Contributions are de-identified and aggregated to support better statistical

@@ -36,7 +36,7 @@ export default function AdminPage() {
 
   if (!allowed) {
     return (
-      <div className="rounded-3xl border border-zinc-200 bg-white p-6 dark:border-white/10 dark:bg-white/5">
+      <div className="ll-card">
         <h1 className="text-2xl font-semibold tracking-tight">Admin</h1>
         <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-300">
           This page is gated. Log in with the admin email/password to enable admin mode.
@@ -44,13 +44,13 @@ export default function AdminPage() {
         <div className="mt-5 flex flex-col gap-3 sm:flex-row">
           <Link
             href="/login"
-            className="inline-flex h-11 items-center justify-center rounded-2xl bg-zinc-900 px-5 text-sm font-semibold text-white transition-colors hover:bg-zinc-800 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
+            className="ll-btn-primary"
           >
             Go to login
           </Link>
           <Link
             href="/"
-            className="inline-flex h-11 items-center justify-center rounded-2xl border border-zinc-200 bg-white px-5 text-sm font-semibold text-zinc-900 transition-colors hover:bg-zinc-50 dark:border-white/10 dark:bg-black dark:text-zinc-50 dark:hover:bg-white/5"
+            className="ll-btn-secondary"
           >
             Back to home
           </Link>
@@ -73,14 +73,14 @@ export default function AdminPage() {
             clearAdminMode();
             window.location.href = "/";
           }}
-          className="inline-flex h-11 items-center justify-center rounded-2xl border border-zinc-200 bg-white px-5 text-sm font-semibold text-zinc-900 transition-colors hover:bg-zinc-50 dark:border-white/10 dark:bg-black dark:text-zinc-50 dark:hover:bg-white/5"
+          className="ll-btn-secondary"
         >
           Exit admin
         </button>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
-        <div className="rounded-3xl border border-zinc-200 bg-white p-6 dark:border-white/10 dark:bg-white/5 lg:col-span-2">
+        <div className="ll-card lg:col-span-2">
           <h2 className="text-lg font-semibold">Search</h2>
           <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-300">
             Search across aggregated stats, symptoms, blog highlights, and forum topics.
@@ -93,19 +93,19 @@ export default function AdminPage() {
           </div>
         </div>
 
-        <div className="rounded-3xl border border-zinc-200 bg-white p-6 dark:border-white/10 dark:bg-white/5">
+        <div className="ll-card">
           <h2 className="text-lg font-semibold">Admin actions</h2>
           <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-300">
             These controls only appear while admin mode is active.
           </p>
           <div className="mt-4 grid gap-3">
-            <button className="inline-flex h-11 items-center justify-center rounded-2xl bg-zinc-900 px-5 text-sm font-semibold text-white transition-colors hover:bg-zinc-800 dark:bg-white dark:text-black dark:hover:bg-zinc-200">
+            <button className="ll-btn-primary">
               Create blog post
             </button>
-            <button className="inline-flex h-11 items-center justify-center rounded-2xl border border-zinc-200 bg-white px-5 text-sm font-semibold text-zinc-900 transition-colors hover:bg-zinc-50 dark:border-white/10 dark:bg-black dark:text-zinc-50 dark:hover:bg-white/5">
+            <button className="ll-btn-secondary">
               Review flagged forum topics
             </button>
-            <button className="inline-flex h-11 items-center justify-center rounded-2xl border border-zinc-200 bg-white px-5 text-sm font-semibold text-zinc-900 transition-colors hover:bg-zinc-50 dark:border-white/10 dark:bg-black dark:text-zinc-50 dark:hover:bg-white/5">
+            <button className="ll-btn-secondary">
               Export dataset (CSV)
             </button>
           </div>
@@ -114,7 +114,7 @@ export default function AdminPage() {
 
       {results && (
         <div className="grid gap-6">
-          <div className="rounded-3xl border border-zinc-200 bg-white p-6 dark:border-white/10 dark:bg-white/5">
+          <div className="ll-card">
             <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
               Correlation stats ({results.correlations.length})
             </h3>
@@ -122,7 +122,7 @@ export default function AdminPage() {
               {results.correlations.map((s) => (
                 <div
                   key={s.label}
-                  className="rounded-2xl border border-zinc-200 bg-white p-4 dark:border-white/10 dark:bg-black"
+                  className="ll-card-inner"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="text-sm font-semibold">{s.label}</div>
@@ -141,7 +141,7 @@ export default function AdminPage() {
             </div>
           </div>
 
-          <div className="rounded-3xl border border-zinc-200 bg-white p-6 dark:border-white/10 dark:bg-white/5">
+          <div className="ll-card">
             <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
               Symptom heatmap items ({results.symptoms.length})
             </h3>
@@ -149,7 +149,7 @@ export default function AdminPage() {
               {results.symptoms.map((s) => (
                 <div
                   key={s.symptom}
-                  className="rounded-2xl border border-zinc-200 bg-white p-4 dark:border-white/10 dark:bg-black"
+                  className="ll-card-inner"
                 >
                   <div className="text-sm font-semibold">{s.symptom}</div>
                   <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-zinc-100 dark:bg-white/10">
@@ -166,7 +166,7 @@ export default function AdminPage() {
             </div>
           </div>
 
-          <div className="rounded-3xl border border-zinc-200 bg-white p-6 dark:border-white/10 dark:bg-white/5">
+          <div className="ll-card">
             <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
               Blog highlights ({results.blogs.length})
             </h3>
@@ -174,7 +174,7 @@ export default function AdminPage() {
               {results.blogs.map((b) => (
                 <div
                   key={b.id}
-                  className="rounded-2xl border border-zinc-200 bg-white p-4 dark:border-white/10 dark:bg-black"
+                  className="ll-card-inner"
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div className="text-sm font-semibold">{b.title}</div>
@@ -203,7 +203,7 @@ export default function AdminPage() {
             </div>
           </div>
 
-          <div className="rounded-3xl border border-zinc-200 bg-white p-6 dark:border-white/10 dark:bg-white/5">
+          <div className="ll-card">
             <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
               Forum topics ({results.topics.length})
             </h3>
@@ -211,7 +211,7 @@ export default function AdminPage() {
               {results.topics.map((t) => (
                 <div
                   key={t.id}
-                  className="flex items-center justify-between rounded-2xl border border-zinc-200 bg-white p-4 dark:border-white/10 dark:bg-black"
+                  className="flex items-center justify-between rounded-2xl border border-zinc-200/70 bg-white/70 p-4 backdrop-blur dark:border-white/10 dark:bg-black/30"
                 >
                   <div>
                     <div className="text-sm font-semibold">{t.title}</div>
