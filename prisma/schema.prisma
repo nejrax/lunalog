@@ -1,0 +1,139 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  PATIENT
+  ADMIN
+}
+
+enum EndometriosisDiagnosisStatus {
+  NO
+  SUSPECTED
+  CONFIRMED
+}
+
+enum CyclePhase {
+  MENSTRUATION
+  FOLLICULAR
+  OVULATION
+  LUTEAL
+  UNKNOWN
+}
+
+enum RemedyCategory {
+  TEA
+  SUPPLEMENT
+  SELF_CARE
+  MEDICATION
+  OTHER
+}
+
+enum TimeOfDay {
+  MORNING
+  AFTERNOON
+  EVENING
+  NIGHT
+  UNKNOWN
+}
+
+model User {
+  id            String   @id @default(cuid())
+  publicId      String   @unique @default(uuid())
+  email         String   @unique
+  passwordHash  String
+  role          UserRole @default(PATIENT)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  consent       Consent?
+  profile       Profile?
+  symptomEntries SymptomEntry[]
+  remedyEntries  RemedyEntry[]
+}
+
+model Consent {
+  id                 String   @id @default(cuid())
+  userId             String   @unique
+  researchOptIn      Boolean  @default(false)
+  intimateFieldsOptIn Boolean @default(false)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Profile {
+  id                   String   @id @default(cuid())
+  userId               String   @unique
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  age                  Int?
+  weightKg             Float?
+  heightCm             Float?
+  country              String?
+  timezone             String?
+
+  pcosDiagnosis        Boolean?
+  endometriosisStatus  EndometriosisDiagnosisStatus @default(NO)
+  otherDiagnoses       String?
+  currentTreatment     Boolean?
+  treatmentType        String?
+  hormonalTherapy      Boolean?
+  surgeryHistory       String?
+
+  averageCycleLengthDays Int?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model SymptomEntry {
+  id           String     @id @default(cuid())
+  userId       String
+  date         DateTime
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  cyclePhase   CyclePhase @default(UNKNOWN)
+  lastPeriodDate DateTime?
+  periodFlow   String?
+
+  scoresJson   Json
+  notes        String?
+
+  intimateJson Json?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@index([userId, date])
+}
+
+model RemedyEntry {
+  id            String         @id @default(cuid())
+  userId        String
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  remedyName    String
+  category      RemedyCategory @default(OTHER)
+  takenAt       DateTime
+  timeOfDay     TimeOfDay      @default(UNKNOWN)
+  effectiveness Int?
+  notes         String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, takenAt])
+}

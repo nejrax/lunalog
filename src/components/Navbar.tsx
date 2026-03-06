@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
-import { isAdminMode } from "@/lib/session";
+import { useEffect, useState } from "react";
+import { getMe, type AuthUser } from "@/lib/clientAuth";
 
 type NavbarProps = {
   logoText?: string;
@@ -30,37 +30,59 @@ function NavLink({ href, label }: { href: string; label: string }) {
 
 export function Navbar({ logoText = "LunaLog" }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const admin = typeof window !== "undefined" ? isAdminMode() : false;
+  const [user, setUser] = useState<AuthUser | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    getMe()
+      .then((u) => {
+        if (mounted) setUser(u);
+      })
+      .catch(() => {
+        if (mounted) setUser(null);
+      });
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const isAdmin = user?.role === "ADMIN";
 
   return (
-    <header className="sticky top-0 z-50 border-b border-zinc-200/60 bg-white/70 backdrop-blur dark:border-white/10 dark:bg-black/40">
+    <header className="sticky top-0 z-50 border-b border-zinc-200/60 bg-white/70 backdrop-blur">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3">
         <div className="flex items-center gap-3">
           <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 text-xs font-semibold text-zinc-900 dark:border-white/10 dark:bg-white/5 dark:text-zinc-50">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 text-xs font-semibold text-zinc-900">
               LOGO
             </div>
             <div className="flex flex-col leading-tight">
-              <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+              <span className="text-sm font-semibold text-zinc-900">
                 {logoText}
               </span>
-              <span className="text-xs text-zinc-500 dark:text-zinc-400">
+              <span className="text-xs text-zinc-500">
                 Anonymous symptom insights
               </span>
             </div>
           </Link>
 
-          {admin && (
-            <span className="hidden rounded-full border border-emerald-200 bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-800 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-200 sm:inline-flex">
-              Admin mode
+          {isAdmin && (
+            <span className="hidden rounded-full border border-emerald-200 bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-800 sm:inline-flex">
+              Admin
             </span>
           )}
         </div>
 
         <nav className="hidden items-center gap-6 md:flex">
-          <NavLink href="/" label="Home" />
-          <NavLink href="/log" label="Log symptoms" />
-          <NavLink href="/admin" label="Admin" />
+          <NavLink href="/" label="Landing" />
+          <NavLink href="/home" label="Home" />
+          <NavLink href="/log" label="Log" />
+          {isAdmin && <NavLink href="/admin" label="Admin" />}
+          {user ? (
+            <NavLink href="/profile" label="Profile" />
+          ) : (
+            <NavLink href="/signup" label="Signup" />
+          )}
           <NavLink href="/login" label="Login" />
         </nav>
 
@@ -82,17 +104,23 @@ export function Navbar({ logoText = "LunaLog" }: NavbarProps) {
       </div>
 
       {mobileOpen && (
-        <div className="border-t border-zinc-200/60 bg-white/80 backdrop-blur dark:border-white/10 dark:bg-black/60 md:hidden">
+        <div className="border-t border-zinc-200/60 bg-white/80 backdrop-blur md:hidden">
           <div className="mx-auto grid w-full max-w-6xl gap-3 px-4 py-4">
-            {admin && (
-              <span className="w-fit rounded-full border border-emerald-200 bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-800 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-200">
-                Admin mode
+            {isAdmin && (
+              <span className="w-fit rounded-full border border-emerald-200 bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-800">
+                Admin
               </span>
             )}
             <div className="grid gap-2">
-              <NavLink href="/" label="Home" />
-              <NavLink href="/log" label="Log symptoms" />
-              <NavLink href="/admin" label="Admin" />
+              <NavLink href="/" label="Landing" />
+              <NavLink href="/home" label="Home" />
+              <NavLink href="/log" label="Log" />
+              {isAdmin && <NavLink href="/admin" label="Admin" />}
+              {user ? (
+                <NavLink href="/profile" label="Profile" />
+              ) : (
+                <NavLink href="/signup" label="Signup" />
+              )}
               <NavLink href="/login" label="Login" />
             </div>
           </div>

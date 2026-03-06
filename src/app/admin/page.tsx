@@ -1,20 +1,38 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { SearchBar } from "@/components/SearchBar";
 import { blogHighlights, correlationStats, symptomHeat, trendingTopics } from "@/lib/mockData";
-import { clearAdminMode, isAdminMode } from "@/lib/session";
+import { clearAuthToken, getMe, type AuthUser } from "@/lib/clientAuth";
 
 function contains(haystack: string, needle: string) {
   return haystack.toLowerCase().includes(needle.toLowerCase());
 }
 
 export default function AdminPage() {
-  const allowed = useMemo(() => {
-    if (typeof window === "undefined") return false;
-    return isAdminMode();
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [authChecked, setAuthChecked] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+    getMe()
+      .then((u) => {
+        if (!mounted) return;
+        setUser(u);
+        setAuthChecked(true);
+      })
+      .catch(() => {
+        if (!mounted) return;
+        setUser(null);
+        setAuthChecked(true);
+      });
+    return () => {
+      mounted = false;
+    };
   }, []);
+
+  const allowed = user?.role === "ADMIN";
 
   const [query, setQuery] = useState<string>("");
 
@@ -34,12 +52,21 @@ export default function AdminPage() {
     return { correlations, symptoms, blogs, topics };
   }, [query]);
 
+  if (!authChecked) {
+    return (
+      <div className="ll-card">
+        <h1 className="text-2xl font-semibold tracking-tight">Admin</h1>
+        <p className="mt-2 text-sm leading-6 text-zinc-600">Checking access…</p>
+      </div>
+    );
+  }
+
   if (!allowed) {
     return (
       <div className="ll-card">
         <h1 className="text-2xl font-semibold tracking-tight">Admin</h1>
         <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-300">
-          This page is gated. Log in with the admin email/password to enable admin mode.
+          Access denied. You must be logged in with an admin account.
         </p>
         <div className="mt-5 flex flex-col gap-3 sm:flex-row">
           <Link
@@ -70,12 +97,12 @@ export default function AdminPage() {
         </div>
         <button
           onClick={() => {
-            clearAdminMode();
+            clearAuthToken();
             window.location.href = "/";
           }}
           className="ll-btn-secondary"
         >
-          Exit admin
+          Log out
         </button>
       </div>
 

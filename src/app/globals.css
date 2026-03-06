@@ -1,11 +1,25 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --brand-pink: #ec4899;
-  --brand-indigo: #6366f1;
-  --brand-purple: #a855f7;
+  /* palette generated from Coolors widget */
+  --palette-1: #ffffff;
+  --palette-2: #d79fa7;
+  --palette-3: #edafb8;
+  --palette-4: #f7e1d7;
+  --palette-5: #dedbd2;
+  --palette-6: #b0c4b1;
+  --palette-7: #4a5759;
+  --palette-8: #7f7f7f;
+  --palette-9: #000000;
+
+  --background: var(--palette-1);
+  --foreground: var(--palette-7);
+  --surface: var(--palette-4);
+  --surface-2: var(--palette-5);
+  --primary: var(--palette-2);
+  --primary-2: var(--palette-3);
+  --success: var(--palette-6);
+  --muted: var(--palette-8);
 }
 
 @theme inline {
@@ -17,8 +31,12 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #070712;
-    --foreground: #f4f4f5;
+    /* keep a calm, readable palette instead of pure black/white inversion */
+    --background: var(--palette-5);
+    --foreground: var(--palette-7);
+    --surface: var(--palette-4);
+    --surface-2: var(--palette-5);
+    --muted: var(--palette-8);
   }
 }
 
@@ -34,33 +52,46 @@ html {
 }
 
 ::selection {
-  background: color-mix(in oklab, var(--brand-pink) 30%, transparent);
+  background: color-mix(in oklab, var(--primary) 30%, transparent);
 }
 
 @layer components {
   .ll-card {
-    @apply rounded-3xl border border-zinc-200/70 bg-white/80 p-6 shadow-sm backdrop-blur dark:border-white/10 dark:bg-white/5;
+    @apply rounded-3xl p-6 shadow-sm;
+    border: 1px solid color-mix(in oklab, var(--foreground) 14%, transparent);
+    background: color-mix(in oklab, var(--surface) 75%, white 25%);
   }
 
   .ll-card-inner {
-    @apply rounded-2xl border border-zinc-200/70 bg-white p-4 dark:border-white/10 dark:bg-black/40;
+    @apply rounded-2xl p-4;
+    border: 1px solid color-mix(in oklab, var(--foreground) 12%, transparent);
+    background: color-mix(in oklab, var(--background) 80%, white 20%);
   }
 
   .ll-pill {
-    @apply inline-flex items-center rounded-full border border-zinc-200/70 bg-white/70 px-3 py-1 text-xs font-semibold text-zinc-700 backdrop-blur dark:border-white/10 dark:bg-black/30 dark:text-zinc-200;
+    @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold;
+    border: 1px solid color-mix(in oklab, var(--foreground) 14%, transparent);
+    background: color-mix(in oklab, var(--background) 78%, white 22%);
+    color: var(--foreground);
   }
 
   .ll-btn-primary {
-    @apply inline-flex h-11 items-center justify-center rounded-2xl px-5 text-sm font-semibold text-white shadow-sm transition-all;
-    @apply bg-[linear-gradient(135deg,var(--brand-pink),var(--brand-purple),var(--brand-indigo))];
+    @apply inline-flex h-11 items-center justify-center rounded-2xl px-5 text-sm font-semibold shadow-sm transition-all;
+    background: linear-gradient(135deg, var(--primary), var(--primary-2));
+    color: var(--palette-9);
     @apply hover:brightness-105 active:brightness-95;
   }
 
   .ll-btn-secondary {
-    @apply inline-flex h-11 items-center justify-center rounded-2xl border border-zinc-200/70 bg-white/70 px-5 text-sm font-semibold text-zinc-900 transition-colors hover:bg-white dark:border-white/10 dark:bg-black/30 dark:text-zinc-50 dark:hover:bg-white/5;
+    @apply inline-flex h-11 items-center justify-center rounded-2xl px-5 text-sm font-semibold transition-colors;
+    border: 1px solid color-mix(in oklab, var(--foreground) 18%, transparent);
+    background: color-mix(in oklab, var(--background) 82%, white 18%);
+    color: var(--foreground);
+    @apply hover:brightness-105;
   }
 
   .ll-accent-text {
-    @apply bg-[linear-gradient(135deg,var(--brand-pink),var(--brand-purple),var(--brand-indigo))] bg-clip-text text-transparent;
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, var(--primary), var(--primary-2));
   }
 }

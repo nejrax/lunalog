@@ -2,140 +2,89 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
-import {
-  clearAdminMode,
-  clearAnonymousUserFromStorage,
-  ensureAnonymousUserInStorage,
-  getAnonymousUserFromStorage,
-  isAdminMode,
-  setAdminMode,
-} from "@/lib/session";
+import { useState } from "react";
+import { apiFetch, setAuthToken } from "@/lib/clientAuth";
+
+type LoginResponse = {
+  token: string;
+};
 
 export default function LoginPage() {
   const router = useRouter();
-  const [adminEmail, setAdminEmail] = useState("");
-  const [adminPassword, setAdminPassword] = useState("");
-  const [adminError, setAdminError] = useState<string | null>(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const anon = useMemo(() => {
-    if (typeof window === "undefined") return null;
-    return getAnonymousUserFromStorage();
-  }, []);
-
-  const adminEnabled = useMemo(() => {
-    if (typeof window === "undefined") return false;
-    return isAdminMode();
-  }, []);
-
-  function createAnonymous() {
-    ensureAnonymousUserInStorage();
-    router.push("/log");
-  }
-
-  function logout() {
-    clearAnonymousUserFromStorage();
-    clearAdminMode();
-    router.refresh();
-  }
-
-  function loginAdmin() {
-    setAdminMode(false);
-    setAdminError(null);
-
-    const email = adminEmail.trim();
-    const password = adminPassword;
-
-    const ok = email === "graduationproject@ius.edu.ba" && password === "gradproj2026";
-    if (!ok) {
-      setAdminError("Invalid admin email or password.");
-      return;
+  async function login() {
+    setError(null);
+    setLoading(true);
+    try {
+      const data = await apiFetch<LoginResponse>("/api/auth/login", {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+      });
+      setAuthToken(data.token);
+      router.push("/home");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Login failed");
+    } finally {
+      setLoading(false);
     }
-
-    setAdminMode(true);
-    router.push("/admin");
   }
-
-  const anonStatus = anon ? `Anonymous ID: ${anon.id.slice(0, 8)}…` : "Not logged in";
-  const adminStatus = adminEnabled ? "Admin mode enabled (local session)" : "Admin mode disabled";
 
   return (
-    <div className="grid gap-8">
+    <div className="mx-auto grid w-full max-w-xl gap-6">
       <div className="ll-card">
-        <h1 className="text-2xl font-semibold tracking-tight">Login (anonymous)</h1>
-        <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-300">
-          You can participate without identifying information. Your browser stores an anonymous
-          user id locally.
+        <h1 className="text-2xl font-semibold tracking-tight">Login</h1>
+        <p className="mt-2 text-sm leading-6 text-zinc-600">
+          Login to access your pseudonymous tracking data across devices.
         </p>
 
-        <div className="mt-5 grid gap-3 sm:flex sm:items-center">
-          <button
-            onClick={createAnonymous}
-            className="ll-btn-primary"
-          >
-            Continue anonymously
-          </button>
-          <Link
-            href="/"
-            className="ll-btn-secondary"
-          >
-            Back to home
-          </Link>
-          <button
-            onClick={logout}
-            className="ll-btn-secondary"
-          >
-            Clear local session
-          </button>
-        </div>
+        <div className="mt-6 grid gap-3">
+          <label className="grid gap-2 text-sm">
+            <span className="font-semibold">Email</span>
+            <input
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              className="h-11 w-full rounded-2xl border border-zinc-200/70 bg-white/80 px-4 text-sm text-zinc-900 outline-none focus:ring-2 focus:ring-black/5"
+            />
+          </label>
+          <label className="grid gap-2 text-sm">
+            <span className="font-semibold">Password</span>
+            <input
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Your password"
+              type="password"
+              className="h-11 w-full rounded-2xl border border-zinc-200/70 bg-white/80 px-4 text-sm text-zinc-900 outline-none focus:ring-2 focus:ring-black/5"
+            />
+          </label>
 
-        <div className="mt-5 grid gap-2 text-sm">
-          <div className="rounded-2xl bg-zinc-50/70 px-4 py-3 text-zinc-700 dark:bg-white/5 dark:text-zinc-200">
-            {anonStatus}
-          </div>
-          <div className="rounded-2xl bg-zinc-50/70 px-4 py-3 text-zinc-700 dark:bg-white/5 dark:text-zinc-200">
-            {adminStatus}
+          {error && (
+            <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+              {error}
+            </div>
+          )}
+
+          <div className="mt-2 flex flex-col gap-3 sm:flex-row">
+            <button onClick={login} disabled={loading} className="ll-btn-primary">
+              {loading ? "Signing in…" : "Login"}
+            </button>
+            <Link href="/signup" className="ll-btn-secondary">
+              Create account
+            </Link>
+            <Link href="/" className="ll-btn-secondary">
+              Back
+            </Link>
           </div>
         </div>
       </div>
 
-      <div className="ll-card">
-        <h2 className="text-lg font-semibold">Admin login</h2>
-        <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-300">
-          Admin mode unlocks moderation/edit controls. For this prototype, the admin session is
-          stored locally in your browser.
-        </p>
-        <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
-          <input
-            value={adminEmail}
-            onChange={(e) => setAdminEmail(e.target.value)}
-            placeholder="Admin email"
-            className="h-11 w-full rounded-2xl border border-zinc-200/70 bg-white/70 px-4 text-sm text-zinc-900 outline-none backdrop-blur focus:ring-2 focus:ring-zinc-900/10 dark:border-white/10 dark:bg-black/30 dark:text-zinc-50 dark:focus:ring-white/10"
-          />
-          <input
-            value={adminPassword}
-            onChange={(e) => setAdminPassword(e.target.value)}
-            placeholder="Password"
-            type="password"
-            className="h-11 w-full rounded-2xl border border-zinc-200/70 bg-white/70 px-4 text-sm text-zinc-900 outline-none backdrop-blur focus:ring-2 focus:ring-zinc-900/10 dark:border-white/10 dark:bg-black/30 dark:text-zinc-50 dark:focus:ring-white/10"
-          />
-          <button
-            onClick={loginAdmin}
-            className="ll-btn-primary shrink-0"
-          >
-            Enter admin
-          </button>
-        </div>
-        {adminError && (
-          <div className="mt-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-200">
-            {adminError}
-          </div>
-        )}
-      </div>
-
-      <div className="text-sm text-zinc-600 dark:text-zinc-300">
-        Reminder: this app provides no medical advice. It surfaces aggregated community analysis
-        signals only.
+      <div className="text-sm text-zinc-600">
+        This platform provides no medical advice. It shows anonymous, aggregated community
+        analysis and evidence signals that may be biased or incomplete.
       </div>
     </div>
   );

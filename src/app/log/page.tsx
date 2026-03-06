@@ -1,11 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
-import {
-  ensureAnonymousUserInStorage,
-  getAnonymousUserFromStorage,
-} from "@/lib/session";
+import { useEffect, useState } from "react";
+import { getMe, type AuthUser } from "@/lib/clientAuth";
 
 type LogEntry = {
   date: string;
@@ -36,9 +33,25 @@ function saveLogs(logs: LogEntry[]) {
 }
 
 export default function LogPage() {
-  const anon = useMemo(() => {
-    if (typeof window === "undefined") return null;
-    return getAnonymousUserFromStorage();
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [authChecked, setAuthChecked] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+    getMe()
+      .then((u) => {
+        if (!mounted) return;
+        setUser(u);
+        setAuthChecked(true);
+      })
+      .catch(() => {
+        if (!mounted) return;
+        setUser(null);
+        setAuthChecked(true);
+      });
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const [submitted, setSubmitted] = useState(false);
@@ -52,16 +65,39 @@ export default function LogPage() {
     notes: "",
   });
 
-  function requireAnon() {
-    if (anon) return;
-    ensureAnonymousUserInStorage();
-  }
-
   function submit() {
-    requireAnon();
+    if (!user) return;
     const next = [entry, ...loadLogs()].slice(0, 50);
     saveLogs(next);
     setSubmitted(true);
+  }
+
+  if (!authChecked) {
+    return (
+      <div className="ll-card">
+        <h1 className="text-2xl font-semibold tracking-tight">Log symptoms</h1>
+        <p className="mt-2 text-sm leading-6 text-zinc-600">Checking session…</p>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="ll-card">
+        <h1 className="text-2xl font-semibold tracking-tight">Log symptoms</h1>
+        <p className="mt-2 text-sm leading-6 text-zinc-600">
+          Please login to create entries.
+        </p>
+        <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+          <Link href="/login" className="ll-btn-primary">
+            Go to login
+          </Link>
+          <Link href="/" className="ll-btn-secondary">
+            Back
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -69,8 +105,8 @@ export default function LogPage() {
       <div className="ll-card">
         <h1 className="text-2xl font-semibold tracking-tight">Log today’s symptoms</h1>
         <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-300">
-          Weekly updates improve the community dataset and help identify correlations. This is a
-          prototype: logs are stored only in your browser.
+          Weekly updates help you visualize personal trends. This is a prototype step: entries are
+          still stored in your browser until we connect the form to PostgreSQL.
         </p>
         <div className="mt-6 grid gap-4 md:grid-cols-2">
           <label className="grid gap-2 text-sm">
@@ -174,10 +210,10 @@ export default function LogPage() {
             Submit weekly update
           </button>
           <Link
-            href="/"
+            href="/home"
             className="ll-btn-secondary"
           >
-            Back to home
+            Back to dashboard
           </Link>
         </div>
 
