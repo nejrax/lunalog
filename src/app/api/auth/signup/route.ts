@@ -71,8 +71,18 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: err.flatten() }, { status: 400 });
     }
 
+    const message =
+      err instanceof Error
+        ? err.message
+        : "Signup failed.";
+
     return NextResponse.json(
-      { error: "Signup failed." },
+      {
+        error:
+          process.env.NODE_ENV === "production"
+            ? "Signup failed."
+            : message,
+      },
       { status: 500 },
     );
   }

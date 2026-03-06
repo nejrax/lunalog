@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getMe, type AuthUser } from "@/lib/clientAuth";
@@ -53,8 +54,15 @@ export function Navbar({ logoText = "LunaLog" }: NavbarProps) {
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3">
         <div className="flex items-center gap-3">
           <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 text-xs font-semibold text-zinc-900">
-              LOGO
+            <div className="relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-lg border border-zinc-200 bg-zinc-50">
+              <Image
+                src="/logo.png"
+                alt={logoText}
+                fill
+                sizes="36px"
+                className="object-contain p-1"
+                priority
+              />
             </div>
             <div className="flex flex-col leading-tight">
               <span className="text-sm font-semibold text-zinc-900">

@@ -33,13 +33,26 @@ export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> 
   if (token) headers.set("authorization", `Bearer ${token}`);
 
   const res = await fetch(path, { ...init, headers });
-  const data = (await res.json()) as unknown;
+  const contentType = res.headers.get("content-type") ?? "";
+  const raw = await res.text();
+  const data: unknown = contentType.includes("application/json") && raw
+    ? (JSON.parse(raw) as unknown)
+    : raw;
   if (!res.ok) {
-    const message =
-      typeof data === "object" && data !== null && "error" in data
-        ? String((data as { error: unknown }).error)
-        : "Request failed";
-    throw new Error(message);
+    const message = (() => {
+      if (typeof data === "object" && data !== null && "error" in data) {
+        const errVal = (data as { error: unknown }).error;
+        if (typeof errVal === "string") return errVal;
+        try {
+          return JSON.stringify(errVal);
+        } catch {
+          return "Request failed";
+        }
+      }
+      if (typeof data === "string" && data.trim().length) return data;
+      return "Request failed";
+    })();
+    throw new Error(`${res.status} ${res.statusText}: ${message}`);
   }
   return data as T;
 }

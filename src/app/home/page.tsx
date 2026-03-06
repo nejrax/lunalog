@@ -106,6 +106,34 @@ export default function HomeAfterLoginPage() {
           <div>4) Review trends and export a doctor report (PDF)</div>
         </div>
       </div>
+
+      <div className="ll-card">
+        <h2 className="text-2xl font-semibold tracking-tight">About the Web App</h2>
+        <div className="mt-3 grid gap-2 text-sm leading-6 text-zinc-600">
+          <div>Track menstrual cycles</div>
+          <div>Track symptoms</div>
+          <div>Track remedies</div>
+          <div>Identify personal health patterns</div>
+          <div>Contribute anonymized data for research</div>
+        </div>
+      </div>
+
+      <div className="ll-card">
+        <h2 className="text-2xl font-semibold tracking-tight">Medical Disclaimer</h2>
+        <p className="mt-3 text-sm leading-6 text-zinc-600">
+          This platform provides no medical advice. It shows anonymous, aggregated community
+          analysis and evidence signals that may be biased or incomplete. Always consult a
+          licensed clinician for diagnosis and treatment.
+        </p>
+      </div>
+
+      <div className="ll-card">
+        <h2 className="text-2xl font-semibold tracking-tight">Privacy and Anonymity</h2>
+        <p className="mt-3 text-sm leading-6 text-zinc-600">
+          Users can participate anonymously. Data is de-identified and used only for research-style
+          pattern discovery and descriptive statistics.
+        </p>
+      </div>
     </div>
   );
 }

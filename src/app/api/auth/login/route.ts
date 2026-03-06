@@ -60,6 +60,15 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: err.flatten() }, { status: 400 });
     }
 
-    return NextResponse.json({ error: "Login failed." }, { status: 500 });
+    const message = err instanceof Error ? err.message : "Login failed.";
+    return NextResponse.json(
+      {
+        error:
+          process.env.NODE_ENV === "production"
+            ? "Login failed."
+            : message,
+      },
+      { status: 500 },
+    );
   }
 }
